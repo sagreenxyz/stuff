@@ -1,0 +1,34 @@
+---
+title: "Intermediate Value Theorem"
+order: 3
+topicSlug: "mathematics"
+topicTitle: "Mathematics"
+bookSlug: "calculus"
+bookTitle: "Calculus: A Complete Course"
+unitSlug: "limits-continuity"
+unitTitle: "Limits and Continuity"
+unitOrder: 1
+chapterSlug: "continuity"
+chapterTitle: "Continuity"
+chapterOrder: 2
+---
+
+# Intermediate Value Theorem
+
+<p>The Intermediate Value Theorem (IVT) is one of the great theorems of calculus, capturing the intuitive idea that a continuous function cannot jump over intermediate values. It guarantees the existence of solutions to equations and has wide-ranging applications in mathematics, physics, and economics.</p>
+
+## Statement and Proof Sketch
+
+<p>The Intermediate Value Theorem states: if f is continuous on [a, b] and N is any value strictly between f(a) and f(b), then there exists at least one c in (a, b) such that f(c) = N. The proof relies on the completeness of the real numbers—the least upper bound property—and is a beautiful application of real analysis.</p><p>A particularly important corollary is Bolzano's theorem: if f is continuous on [a, b] and f(a) and f(b) have opposite signs, then f has at least one zero in (a, b). This provides a theoretical foundation for numerical root-finding methods such as bisection.</p>
+
+### The Bisection Method
+
+<p>The bisection method exploits the IVT to locate roots numerically. Starting with an interval [a, b] where f changes sign, one evaluates f at the midpoint m = (a+b)/2. If f(m) = 0, we are done; otherwise, the sign change is in [a, m] or [m, b]. Repeating this halves the interval at each step, converging linearly to a root. After n steps, the root is located within an interval of length (b−a)/2^n.</p>
+
+## Applications of the IVT
+
+<p>The IVT guarantees that any polynomial of odd degree has at least one real root—since odd-degree polynomials take arbitrarily large positive and negative values, they must cross zero somewhere. It also implies that the equation cos(x) = x has a solution (as can be shown by considering f(x) = cos(x) − x and noting f(0) > 0, f(π/2) < 0).</p><p>In economics, the IVT is invoked to argue that competitive markets clear: if supply is a continuous function of price that exceeds demand at high prices and falls short of demand at low prices, the theorem guarantees the existence of an equilibrium price. In game theory, related fixed-point theorems—themselves generalizations of the IVT—establish the existence of Nash equilibria.</p>
+
+### Fixed-Point Theorems
+
+<p>Brouwer's fixed-point theorem, a topological generalization of the IVT, states that any continuous function from a closed ball in ℝⁿ to itself has at least one fixed point. For n = 1, this reduces to the observation that any continuous function f: [0,1] → [0,1] must satisfy f(c) = c for some c ∈ [0,1], a direct consequence of the IVT applied to g(x) = f(x) − x.</p>
