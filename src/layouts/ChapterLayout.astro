@@ -3,14 +3,14 @@ import BaseLayout from './BaseLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import Pagination from '../components/Pagination.astro';
 import type { MarkdownHeading } from 'astro';
-import type { NavChapter } from '../data/content';
+import type { NavSection } from '../data/content';
 
 interface Props {
   title: string;
   bookTitle: string;
   headings: MarkdownHeading[];
-  prev: NavChapter | null;
-  next: NavChapter | null;
+  prev: NavSection | null;
+  next: NavSection | null;
 }
 
 const { title, bookTitle, headings, prev, next } = Astro.props;

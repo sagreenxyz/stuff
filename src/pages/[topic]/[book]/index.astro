@@ -2,12 +2,12 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { getCollection } from 'astro:content';
-import { buildNavTree, entryToNavChapter } from '../../../data/content';
+import { buildNavTree, entryToNavSection } from '../../../data/content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('chapters');
-  const navChapters = entries.map(entryToNavChapter);
-  const topics = buildNavTree(navChapters);
+  const entries = await getCollection('sections');
+  const navSections = entries.map(entryToNavSection);
+  const topics = buildNavTree(navSections);
   const paths = [];
   for (const topic of topics) {
     for (const book of topic.books) {
@@ -35,13 +35,20 @@ const { topic, book } = Astro.props;
         {book.units.map((unit) => (
           <div style="margin-bottom:2em">
             <h2 style="color:inherit">{unit.title}</h2>
-            <ul>
-              {unit.chapters.map((chapter) => (
-                <li>
-                  <a href={chapter.href}>{chapter.title}</a>
-                </li>
-              ))}
-            </ul>
+            {unit.chapters.map((chapter) => (
+              <div style="margin-bottom:1em">
+                <h3 style="color:inherit">
+                  <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}`}>{chapter.title}</a>
+                </h3>
+                <ul>
+                  {chapter.sections.map((section) => (
+                    <li>
+                      <a href={section.href}>{section.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         ))}
       </div>

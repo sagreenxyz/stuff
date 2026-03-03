@@ -1,47 +1,51 @@
 ---
 import { getCollection } from 'astro:content';
-import ChapterLayout from '../../../../../layouts/ChapterLayout.astro';
-import { entryToNavChapter, buildNavTree, getChapterNav } from '../../../../../data/content';
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../../../components/Breadcrumb.astro';
+import { buildNavTree, entryToNavSection } from '../../../../../data/content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('chapters');
-  const navChapters = entries.map(entryToNavChapter);
-  // Sort globally for pagination (by topic, book, unit, then order within unit)
-  navChapters.sort((a, b) => {
-    const topicCmp = a.topicSlug.localeCompare(b.topicSlug);
-    if (topicCmp !== 0) return topicCmp;
-    const bookCmp = a.bookSlug.localeCompare(b.bookSlug);
-    if (bookCmp !== 0) return bookCmp;
-    const unitCmp = a.unitOrder - b.unitOrder;
-    if (unitCmp !== 0) return unitCmp;
-    return a.order - b.order;
-  });
-
-  return entries.map((entry) => {
-    const navCh = entryToNavChapter(entry);
-    const { prev, next } = getChapterNav(navChapters, navCh.href);
-    return {
-      params: {
-        topic: navCh.topicSlug,
-        book: navCh.bookSlug,
-        unit: navCh.unitSlug,
-        chapter: navCh.slug,
-      },
-      props: { entry, navCh, prev, next },
-    };
-  });
+  const entries = await getCollection('sections');
+  const navSections = entries.map(entryToNavSection);
+  const topics = buildNavTree(navSections);
+  const paths = [];
+  for (const topic of topics) {
+    for (const book of topic.books) {
+      for (const unit of book.units) {
+        for (const chapter of unit.chapters) {
+          paths.push({
+            params: { topic: topic.slug, book: book.slug, unit: unit.slug, chapter: chapter.slug },
+            props: { topic, book, unit, chapter },
+          });
+        }
+      }
+    }
+  }
+  return paths;
 }
 
-const { entry, navCh, prev, next } = Astro.props;
-const { Content, headings } = await entry.render();
+const { topic, book, unit, chapter } = Astro.props;
 ---
-<ChapterLayout
-  title={navCh.title}
-  bookTitle={navCh.bookTitle}
-  headings={headings}
-  prev={prev}
-  next={next}
->
-  <h1>{navCh.title}</h1>
-  <Content />
-</ChapterLayout>
+<BaseLayout title={`${chapter.title} — ${unit.title}`}>
+  <main class="main-content" style="width:100%">
+    <Breadcrumb items={[
+      { label: topic.title, href: `/${topic.slug}` },
+      { label: book.title, href: `/${topic.slug}/${book.slug}` },
+      { label: unit.title, href: `/${topic.slug}/${book.slug}/${unit.slug}` },
+      { label: chapter.title },
+    ]} />
+    <div class="apa-paper" style="min-height:auto">
+      <div class="apa-content">
+        <h1>{chapter.title}</h1>
+        <p class="no-indent">From <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>{unit.title}</a>.</p>
+        <ul>
+          {chapter.sections.map((section) => (
+            <li>
+              <a href={section.href}>{section.title}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

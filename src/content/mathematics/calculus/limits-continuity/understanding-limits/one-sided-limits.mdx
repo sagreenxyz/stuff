@@ -1,0 +1,34 @@
+---
+title: "One-Sided Limits"
+order: 2
+topicSlug: "mathematics"
+topicTitle: "Mathematics"
+bookSlug: "calculus"
+bookTitle: "Calculus: A Complete Course"
+unitSlug: "limits-continuity"
+unitTitle: "Limits and Continuity"
+unitOrder: 1
+chapterSlug: "understanding-limits"
+chapterTitle: "Understanding Limits"
+chapterOrder: 1
+---
+
+# One-Sided Limits
+
+<p>One-sided limits refine the notion of a limit by considering the behavior of a function as the independent variable approaches a point from only one direction—either from the left or from the right. This refinement is essential for understanding functions with jump discontinuities and for defining derivatives of piecewise functions.</p>
+
+## Left-Hand and Right-Hand Limits
+
+<p>The right-hand limit of f(x) as x approaches a, written lim<sub>x→a⁺</sub> f(x) = L, means f(x) approaches L as x approaches a from values greater than a. Similarly, the left-hand limit lim<sub>x→a⁻</sub> f(x) = M describes approach from below.</p><p>A two-sided limit lim<sub>x→a</sub> f(x) exists if and only if both one-sided limits exist and are equal. If the left and right limits both exist but are unequal, the two-sided limit does not exist, and the function has a jump discontinuity at a.</p><p>Consider the Heaviside step function H(x), which equals 0 for x < 0 and 1 for x ≥ 0. At x = 0, the left-hand limit is 0 and the right-hand limit is 1. These differ, so the two-sided limit does not exist at x = 0.</p>
+
+### Piecewise Functions
+
+<p>Piecewise-defined functions are natural settings for one-sided limits. When evaluating lim<sub>x→a</sub> f(x) for such a function, one first identifies which piece applies just below a (for the left-hand limit) and just above a (for the right-hand limit). If both pieces yield the same value, the full limit exists.</p>
+
+## Basic Limit Theorems
+
+<p>Several algebraic properties make computing limits tractable without resorting to the epsilon-delta definition every time. If lim<sub>x→a</sub> f(x) = L and lim<sub>x→a</sub> g(x) = M, then: the limit of a sum is the sum of the limits (L + M); the limit of a product is the product of the limits (LM); and the limit of a quotient is the quotient of the limits (L/M), provided M ≠ 0.</p><p>The Squeeze Theorem (also called the Sandwich Theorem) is another powerful tool: if g(x) ≤ f(x) ≤ h(x) near a and lim<sub>x→a</sub> g(x) = lim<sub>x→a</sub> h(x) = L, then lim<sub>x→a</sub> f(x) = L. This is used to prove that lim<sub>x→0</sub> sin(x)/x = 1.</p>
+
+### The Squeeze Theorem in Practice
+
+<p>A classic application of the Squeeze Theorem establishes lim<sub>x→0</sub> x² sin(1/x) = 0. Since |sin(1/x)| ≤ 1 for all x ≠ 0, we have −x² ≤ x² sin(1/x) ≤ x². As both bounding functions tend to 0 as x → 0, the middle function must as well.</p>

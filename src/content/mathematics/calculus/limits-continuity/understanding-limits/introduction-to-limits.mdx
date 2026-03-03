@@ -1,0 +1,38 @@
+---
+title: "Introduction to Limits"
+order: 1
+topicSlug: "mathematics"
+topicTitle: "Mathematics"
+bookSlug: "calculus"
+bookTitle: "Calculus: A Complete Course"
+unitSlug: "limits-continuity"
+unitTitle: "Limits and Continuity"
+unitOrder: 1
+chapterSlug: "understanding-limits"
+chapterTitle: "Understanding Limits"
+chapterOrder: 1
+---
+
+# Introduction to Limits
+
+<p>The concept of a limit is the cornerstone of calculus. It allows mathematicians and scientists to describe the behavior of a function as its input approaches a particular value, even when the function may not be defined at that point. Understanding limits is essential before one can grasp the meaning of derivatives, integrals, and the broader edifice of mathematical analysis.</p>
+
+## Informal Definition of a Limit
+
+<p>Informally, we say that the limit of a function <em>f(x)</em> as <em>x</em> approaches <em>a</em> equals <em>L</em> if the values of <em>f(x)</em> get arbitrarily close to <em>L</em> as <em>x</em> gets sufficiently close to <em>a</em> (but not necessarily equal to <em>a</em>). This is written as lim<sub>x→a</sub> f(x) = L.</p><p>The key insight is that limits describe <em>tendency</em> rather than <em>value</em>. We are asking: what does the function appear to be heading toward? Whether the function actually reaches that value is a separate question altogether, addressed by the notion of continuity.</p><p>Consider the function f(x) = (x² − 1)/(x − 1). At x = 1, this expression is undefined (division by zero). Yet for all x ≠ 1, we can simplify: f(x) = x + 1. As x approaches 1, f(x) approaches 2. The limit exists and equals 2, despite the function being undefined at x = 1.</p>
+
+### Historical Context
+
+<p>The rigorous formulation of limits was developed in the 19th century primarily by Augustin-Louis Cauchy and later refined by Karl Weierstrass. Before this, Newton and Leibniz had developed calculus using intuitive notions of infinitesimals—quantities that were "infinitely small" but not zero. These methods, while productive, lacked logical rigor and led to philosophical controversies.</p><p>The epsilon-delta definition, introduced by Weierstrass, resolved these issues by replacing vague infinitesimal language with precise quantifier statements. This formalization is regarded as one of the great achievements of 19th-century mathematics, grounding calculus on a firm logical foundation.</p>
+
+### Numerical Approach to Limits
+
+<p>Before working through formal proofs, it is useful to investigate limits numerically. By constructing a table of values of f(x) for x approaching the target value from both sides, we can form a conjecture about the limit. For example, to investigate lim<sub>x→2</sub> (x² − 4)/(x − 2), one evaluates the function at x = 1.9, 1.99, 1.999 and x = 2.1, 2.01, 2.001, observing that the values cluster around 4.</p><p>This numerical intuition is valuable for building understanding, but it can occasionally mislead. A function might behave predictably near most points while having subtle behavior at others. The formal epsilon-delta definition serves as the ultimate arbiter.</p>
+
+## The Epsilon-Delta Definition
+
+<p>The formal definition, due to Weierstrass, states: lim<sub>x→a</sub> f(x) = L if and only if for every ε > 0 there exists δ > 0 such that whenever 0 < |x − a| < δ, it follows that |f(x) − L| < ε.</p><p>This definition captures the idea that we can make f(x) as close to L as desired (within any positive tolerance ε) by restricting x to be within a sufficiently small distance δ of a. The condition 0 < |x − a| (strict inequality) ensures that x ≠ a, reinforcing that the limit describes behavior <em>near</em> a, not <em>at</em> a.</p><p>Proving limits from this definition requires mathematical ingenuity. Given an arbitrary ε > 0, one must produce an explicit δ and verify the implication. These epsilon-delta proofs are a hallmark of introductory real analysis courses.</p>
+
+### A Worked Example
+
+<p>Let us prove that lim<sub>x→3</sub> (2x − 1) = 5. Given ε > 0, we need δ > 0 such that |x − 3| < δ implies |(2x − 1) − 5| < ε. Simplifying: |(2x − 1) − 5| = |2x − 6| = 2|x − 3|. Thus if we choose δ = ε/2, then |x − 3| < δ implies 2|x − 3| < 2δ = ε. This completes the proof.</p>

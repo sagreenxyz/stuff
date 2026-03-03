@@ -1,0 +1,34 @@
+---
+title: "Definition of the Derivative"
+order: 1
+topicSlug: "mathematics"
+topicTitle: "Mathematics"
+bookSlug: "calculus"
+bookTitle: "Calculus: A Complete Course"
+unitSlug: "differentiation"
+unitTitle: "Differentiation"
+unitOrder: 2
+chapterSlug: "the-derivative"
+chapterTitle: "The Derivative"
+chapterOrder: 1
+---
+
+# Definition of the Derivative
+
+<p>The derivative is one of the two fundamental objects of calculus (alongside the integral). It captures the instantaneous rate of change of a function—how rapidly the function's output is changing at a particular input. The derivative has interpretations in geometry (slope of a tangent line), physics (instantaneous velocity and acceleration), and economics (marginal cost and revenue).</p>
+
+## The Limit Definition
+
+<p>The derivative of f at x = a is defined as f'(a) = lim<sub>h→0</sub> [f(a+h) − f(a)]/h, provided this limit exists. This expression is the limit of the average rate of change over the interval [a, a+h] as the interval length h shrinks to zero. When the limit exists, f is said to be <em>differentiable</em> at a.</p><p>Geometrically, [f(a+h) − f(a)]/h is the slope of the secant line through the points (a, f(a)) and (a+h, f(a+h)). As h → 0, the secant line rotates toward the tangent line, and its slope approaches the slope of the tangent. The derivative is thus the slope of the tangent line to the graph of f at the point (a, f(a)).</p>
+
+### Differentiability Implies Continuity
+
+<p>An important theorem states that if f is differentiable at a, then f is continuous at a. The converse is false: the function f(x) = |x| is continuous at 0 but not differentiable there (the left and right derivatives are −1 and +1 respectively). Differentiability is thus a stronger condition than continuity.</p>
+
+## Notation for Derivatives
+
+<p>Several notations for the derivative are in common use. Lagrange's notation f'(x) (read "f prime of x") is widely used for functions. Leibniz's notation dy/dx (or df/dx) emphasizes the ratio interpretation and is particularly convenient when working with the chain rule and implicit differentiation. Newton's dot notation ẋ is used in physics to denote time derivatives.</p><p>Higher derivatives are denoted f''(x), f'''(x), or f⁽ⁿ⁾(x) in Lagrange's notation, and d²y/dx², d³y/dx³, dⁿy/dxⁿ in Leibniz's notation. These notations capture different intuitions and are suited to different computational contexts.</p>
+
+### Higher-Order Derivatives
+
+<p>The second derivative f''(x) is the derivative of f'(x) and measures the rate of change of the rate of change—the concavity of the original function. In kinematics, the first derivative of position is velocity, and the second derivative is acceleration. The third derivative (jerk) measures the rate of change of acceleration.</p>

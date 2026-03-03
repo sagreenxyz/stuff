@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from 'astro:content';
+import ChapterLayout from '../../../../../../layouts/ChapterLayout.astro';
+import { entryToNavSection, buildNavTree, getSectionNav } from '../../../../../../data/content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('sections');
+  const navSections = entries.map(entryToNavSection);
+  // Sort globally for pagination (by topic, book, unit order, chapter order, then section order)
+  navSections.sort((a, b) => {
+    const topicCmp = a.topicSlug.localeCompare(b.topicSlug);
+    if (topicCmp !== 0) return topicCmp;
+    const bookCmp = a.bookSlug.localeCompare(b.bookSlug);
+    if (bookCmp !== 0) return bookCmp;
+    const unitCmp = a.unitOrder - b.unitOrder;
+    if (unitCmp !== 0) return unitCmp;
+    const chapterCmp = a.chapterOrder - b.chapterOrder;
+    if (chapterCmp !== 0) return chapterCmp;
+    return a.order - b.order;
+  });
+
+  return entries.map((entry) => {
+    const navSec = entryToNavSection(entry);
+    const { prev, next } = getSectionNav(navSections, navSec.href);
+    return {
+      params: {
+        topic: navSec.topicSlug,
+        book: navSec.bookSlug,
+        unit: navSec.unitSlug,
+        chapter: navSec.chapterSlug,
+        section: navSec.slug,
+      },
+      props: { entry, navSec, prev, next },
+    };
+  });
+}
+
+const { entry, navSec, prev, next } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<ChapterLayout
+  title={navSec.title}
+  bookTitle={navSec.bookTitle}
+  headings={headings}
+  prev={prev}
+  next={next}
+>
+  <Content />
+</ChapterLayout>

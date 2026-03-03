@@ -1,0 +1,34 @@
+---
+title: "Definition of Continuity"
+order: 1
+topicSlug: "mathematics"
+topicTitle: "Mathematics"
+bookSlug: "calculus"
+bookTitle: "Calculus: A Complete Course"
+unitSlug: "limits-continuity"
+unitTitle: "Limits and Continuity"
+unitOrder: 1
+chapterSlug: "continuity"
+chapterTitle: "Continuity"
+chapterOrder: 2
+---
+
+# Definition of Continuity
+
+<p>Continuity formalizes the intuitive notion of a function whose graph can be drawn without lifting the pen. A function is continuous at a point if three conditions hold: the function is defined there, the limit exists, and the limit equals the function's value. This elegant definition underpins the most important theorems of calculus.</p>
+
+## The Three Conditions for Continuity
+
+<p>A function f is continuous at x = a if and only if: (1) f(a) is defined; (2) lim<sub>x→a</sub> f(x) exists; and (3) lim<sub>x→a</sub> f(x) = f(a). Each condition addresses a different way a function can fail to be continuous. Violating condition (1) yields a hole or a missing point; violating (2) yields an oscillation or jump; violating (3) while satisfying (1) and (2) yields a removable discontinuity.</p>
+
+### Removable Discontinuities
+
+<p>A removable discontinuity at x = a occurs when the limit exists but either f(a) is undefined or f(a) ≠ lim<sub>x→a</sub> f(x). These are called "removable" because the discontinuity can be eliminated by redefining f(a) to equal the limit. The function g(x) = (x²−1)/(x−1) has a removable discontinuity at x = 1; extending g by setting g(1) = 2 yields a continuous function.</p>
+
+## Continuity on an Interval
+
+<p>A function is continuous on an open interval (a, b) if it is continuous at every point in that interval. Continuity on a closed interval [a, b] additionally requires right-continuity at a and left-continuity at b. Familiar elementary functions—polynomials, rational functions (where defined), trigonometric functions, exponential and logarithmic functions—are all continuous on their natural domains.</p><p>The algebra of continuous functions is well-behaved: sums, differences, products, and quotients (where the denominator is nonzero) of continuous functions are continuous. Compositions of continuous functions are continuous. These properties, combined with the continuity of elementary functions, allow us to determine continuity for most functions encountered in practice without returning to the definition.</p>
+
+### Composition and Continuity
+
+<p>If g is continuous at a and f is continuous at g(a), then the composition f ∘ g is continuous at a. This result, while intuitively obvious, requires careful proof. It enables the determination of continuity for composite functions like sin(x²), e^(cos x), and ln(1 + x²) by recognizing them as compositions of continuous building blocks.</p>
