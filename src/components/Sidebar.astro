@@ -1,0 +1,77 @@
+---
+import type { Section } from '../data/content';
+
+interface Props {
+  sections: Section[];
+  currentSectionSlug: string;
+  topicSlug: string;
+  bookSlug: string;
+  unitSlug: string;
+  chapterSlug: string;
+}
+
+const { sections, currentSectionSlug, topicSlug, bookSlug, unitSlug, chapterSlug } = Astro.props;
+const currentSection = sections.find((s) => s.slug === currentSectionSlug);
+---
+<aside class="sidebar">
+  <h3>In This Chapter</h3>
+  <ul>
+    {sections.map((section) => (
+      <li>
+        <a
+          href={`/${topicSlug}/${bookSlug}/${unitSlug}/${chapterSlug}/${section.slug}`}
+          class={section.slug === currentSectionSlug ? 'active' : ''}
+        >
+          {section.title}
+        </a>
+        {section.slug === currentSectionSlug && currentSection && currentSection.subsections.length > 0 && (
+          <ul>
+            {currentSection.subsections.map((sub) => (
+              <li class="sub-item">
+                <a href={`#${sub.id}`}>{sub.title}</a>
+                {sub.subsubsections && sub.subsubsections.length > 0 && (
+                  <ul>
+                    {sub.subsubsections.map((subsub) => (
+                      <li class="subsub-item">
+                        <a href={`#${subsub.id}`}>{subsub.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))}
+  </ul>
+</aside>
+
+<script>
+  // Highlight active subsection on scroll
+  const sidebarLinks = document.querySelectorAll<HTMLAnchorElement>('.sidebar .sub-item a, .sidebar .subsub-item a');
+  const headings = Array.from(sidebarLinks)
+    .map((link) => {
+      const id = link.getAttribute('href')?.replace('#', '');
+      return id ? document.getElementById(id) : null;
+    })
+    .filter(Boolean) as HTMLElement[];
+
+  if (headings.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            sidebarLinks.forEach((link) => link.classList.remove('active'));
+            const activeLink = document.querySelector<HTMLAnchorElement>(
+              `.sidebar a[href="#${entry.target.id}"]`
+            );
+            activeLink?.classList.add('active');
+          }
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px' }
+    );
+    headings.forEach((h) => observer.observe(h));
+  }
+</script>

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { topics } from '../../../data/content';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const topic of topics) {
+    for (const book of topic.books) {
+      paths.push({
+        params: { topic: topic.slug, book: book.slug },
+        props: { topic, book },
+      });
+    }
+  }
+  return paths;
+}
+
+const { topic, book } = Astro.props;
+---
+<BaseLayout title={`${book.title} — ${topic.title}`}>
+  <main class="main-content" style="width:100%">
+    <Breadcrumb items={[
+      { label: topic.title, href: `/${topic.slug}` },
+      { label: book.title },
+    ]} />
+    <div class="apa-paper" style="min-height:auto">
+      <div class="apa-content">
+        <h1>{book.title}</h1>
+        <p class="no-indent">
+          Part of the <a href={`/${topic.slug}`}>{topic.title}</a> collection.
+        </p>
+        {book.units.map((unit) => (
+          <div style="margin-bottom:2em">
+            <h2>
+              <a href={`/${topic.slug}/${book.slug}/${unit.slug}`} style="color:inherit;text-decoration:none">
+                {unit.title}
+              </a>
+            </h2>
+            {unit.chapters.map((chapter) => (
+              <div style="margin-bottom:1em">
+                <h3>
+                  <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}`} style="color:inherit;text-decoration:none">
+                    {chapter.title}
+                  </a>
+                </h3>
+                <ul>
+                  {chapter.sections.map((section) => (
+                    <li>
+                      <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}/${section.slug}`}>
+                        {section.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+</BaseLayout>

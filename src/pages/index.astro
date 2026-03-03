@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { topics } from '../data/content';
+---
+<BaseLayout title="Home">
+  <main style="flex:1; background:#e8e8e8;">
+    <div class="home-hero">
+      <h1>OpenTextbook</h1>
+      <p>A comprehensive open-access academic resource covering Mathematics, Psychology, and more. Formatted in APA-7 journal style.</p>
+    </div>
+    <div class="topics-grid">
+      {topics.map((topic) => (
+        <div class="topic-card">
+          <h2><a href={`/${topic.slug}`}>{topic.title}</a></h2>
+          {topic.books.map((book) => (
+            <div style="margin-bottom:1rem">
+              <strong style="font-size:14px">{book.title}</strong>
+              <ul>
+                {book.units.map((unit) => (
+                  <li>
+                    <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>{unit.title}</a>
+                    <span style="color:#999; font-size:11px; margin-left:6px">
+                      ({unit.chapters.length} ch.)
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

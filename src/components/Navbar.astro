@@ -1,0 +1,48 @@
+---
+import { topics } from '../data/content';
+---
+<nav class="navbar">
+  <a href="/" class="navbar-brand">📚 OpenTextbook</a>
+  <ul class="navbar-menu">
+    {topics.map((topic) => (
+      <li class="navbar-item">
+        <button type="button">
+          {topic.title}
+          <span class="chevron"></span>
+        </button>
+        <div class="dropdown">
+          {topic.books.map((book) => (
+            <div class="dropdown-section">
+              <div class="dropdown-header">{book.title}</div>
+              {book.units.map((unit) => (
+                <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>
+                  {unit.title}
+                </a>
+              ))}
+            </div>
+          ))}
+        </div>
+      </li>
+    ))}
+    <li class="navbar-item">
+      <a href="/prompt">Prompt</a>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  // Vanilla JS dropdown toggle for keyboard/click accessibility
+  document.querySelectorAll('.navbar-item > button').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const item = (e.currentTarget as HTMLElement).closest('.navbar-item');
+      const isActive = item?.classList.contains('active');
+      document.querySelectorAll('.navbar-item').forEach((el) => el.classList.remove('active'));
+      if (!isActive) item?.classList.add('active');
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('.navbar-item')) {
+      document.querySelectorAll('.navbar-item').forEach((el) => el.classList.remove('active'));
+    }
+  });
+</script>

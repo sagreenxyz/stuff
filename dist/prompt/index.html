@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="An open-access academic textbook resource."><title>System Prompt | OpenTextbook</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/_astro/_section_.CWqB9_Q3.css"></head> <body> <nav class="navbar"> <a href="/" class="navbar-brand">📚 OpenTextbook</a> <ul class="navbar-menu"> <li class="navbar-item"> <button type="button"> Mathematics <span class="chevron"></span> </button> <div class="dropdown"> <div class="dropdown-section"> <div class="dropdown-header">Calculus: A Complete Course</div> <a href="/mathematics/calculus/limits-continuity"> Limits and Continuity </a><a href="/mathematics/calculus/differentiation"> Differentiation </a> </div> </div> </li><li class="navbar-item"> <button type="button"> Psychology <span class="chevron"></span> </button> <div class="dropdown"> <div class="dropdown-section"> <div class="dropdown-header">Introduction to Psychology</div> <a href="/psychology/intro-psychology/foundations"> Foundations of Psychology </a><a href="/psychology/intro-psychology/cognition-perception"> Cognition and Perception </a> </div> </div> </li> <li class="navbar-item"> <a href="/prompt">Prompt</a> </li> </ul> </nav> <script type="module">document.querySelectorAll(".navbar-item > button").forEach(e=>{e.addEventListener("click",t=>{const c=t.currentTarget.closest(".navbar-item"),a=c?.classList.contains("active");document.querySelectorAll(".navbar-item").forEach(i=>i.classList.remove("active")),a||c?.classList.add("active")})});document.addEventListener("click",e=>{e.target.closest(".navbar-item")||document.querySelectorAll(".navbar-item").forEach(t=>t.classList.remove("active"))});</script> <div class="page-wrapper">  <main class="main-content" style="width:100%"> <div class="apa-paper"> <div class="running-head"> <span>SYSTEM PROMPT DOCUMENTATION</span> <span class="page-num">1</span> </div> <div class="apa-content"> <h1>AI System Prompt: Constructing an Astro Textbook Website</h1> <p class="no-indent" style="text-align:center; font-style:italic">OpenTextbook Project Documentation</p> <div class="abstract"> <h2>Abstract</h2> <p>
+This document presents the cleaned-up system prompt used to instruct an AI coding
+            assistant to build a complete academic textbook website using Astro, Tailwind CSS, and
+            TypeScript. The prompt specifies the navigation architecture, content hierarchy, visual
+            design conventions, sample content requirements, and technical implementation details
+            necessary to produce a functional, production-ready static site.
+</p> </div> <h2>Introduction</h2> <p>
+The following prompt was provided to an AI assistant (GitHub Copilot) to scaffold and
+          implement a full-featured open textbook website. The site is styled after APA-7 journal
+          articles and organizes academic content across a five-level hierarchy: Topics, Books,
+          Units, Chapters, and Sections. The prompt is reproduced below in full, lightly edited for
+          clarity and readability.
+</p> <h2>The Prompt</h2> <h3>Overview and Goal</h3> <p>
+Build a complete <strong>Astro.build</strong> textbook website. The repository currently
+          contains only a <code>README.md</code>. Create a fully functional Astro application with
+          rich academic content, APA-7 visual styling, and a navigable content hierarchy.
+</p> <h3>Navigation Structure</h3> <p>
+Implement a top navbar with dropdown menus that organize content as:
+<strong>Topic → Book → Unit → Chapter</strong>. From the Chapter view, users navigate
+          between Sections using forward/back pagination. The navbar dropdowns should function
+          with vanilla JavaScript—no front-end framework is required.
+</p> <h3>Content Hierarchy</h3> <p>
+The content is organized across six levels: Topics &gt; Books &gt; Units &gt; Chapters
+          &gt; Sections &gt; Subsections &gt; Sub-subsections. Each level has its own index page
+          that lists child items with links. The deepest navigable level (Section) displays the
+          full academic content.
+</p> <h3>Section View Layout</h3> <p>
+The section view includes three parts: (1) a left sidebar with nested subsection
+          navigation that highlights the active subsection on scroll; (2) a main content area
+          rendering the section text in APA-7 format; and (3) forward/back pagination between
+          sections. A breadcrumb at the top shows the full path: Topic &gt; Book &gt; Unit &gt;
+          Chapter &gt; Section.
+</p> <h3>Visual Design: APA-7 Journal Article Format</h3> <p>
+All section content pages should visually resemble a LaTeX-generated APA-7 journal
+          article. Design specifications include:
+</p> <ul> <li>Font: Times New Roman or equivalent serif font at 12pt equivalent</li> <li>Line spacing: double-spaced</li> <li>Margins: 1-inch equivalent on all sides</li> <li>Running head in the header with the article title in uppercase</li> <li>Page number in the upper right corner</li> <li>APA heading levels: H1 centered bold, H2 flush-left bold, H3 flush-left bold italic</li> <li>Paragraphs indented 0.5 inches (except first paragraph after a heading)</li> <li>The "paper" rendered as a white card with a shadow on a gray background</li> </ul> <h3>Sample Content Requirements</h3> <p>
+Populate the site with real academic content organized as follows:
+</p> <ul> <li> <strong>Topic 1: Mathematics</strong> — Book: <em>Calculus: A Complete Course</em>
+with units on Limits &amp; Continuity and Differentiation. Each unit contains 2–3
+            chapters; each chapter contains 3–4 sections with 2–3 subsections and 1–2
+            sub-subsections each.
+</li> <li> <strong>Topic 2: Psychology</strong> — Book: <em>Introduction to Psychology</em>
+with units on Foundations of Psychology and Cognition &amp; Perception. Same
+            structural depth as the Mathematics content.
+</li> </ul> <p>
+All section content should consist of genuine academic prose (multiple paragraphs)
+          appropriate to the subject matter, not placeholder text.
+</p> <h3>Technical Stack and Architecture</h3> <p>
+The technical requirements are as follows:
+</p> <ul> <li><strong>Framework:</strong> Astro (latest version, static output mode)</li> <li><strong>Styling:</strong> Tailwind CSS via <code>@astrojs/tailwind</code></li> <li><strong>Language:</strong> TypeScript (strict mode)</li> <li><strong>Routing:</strong> File-based with <code>getStaticPaths()</code> for all dynamic segments</li> <li><strong>Data:</strong> All content defined in <code>src/data/content.ts</code> with typed interfaces</li> </ul> <h3>File Structure</h3> <p>
+The required file structure includes: <code>src/components/</code> (Navbar, Breadcrumb,
+          Sidebar, Pagination); <code>src/layouts/</code> (BaseLayout, SectionLayout);
+<code>src/pages/</code> with nested dynamic routes following the content hierarchy;
+<code>src/data/content.ts</code>; and <code>src/styles/global.css</code>.
+</p> <h3>Data Structure</h3> <p>
+Define TypeScript interfaces for SubSubsection, Subsection, Section, Chapter, Unit,
+          Book, and Topic. Export a <code>topics</code> array as the root data source. Provide
+          helper functions <code>getAllSections()</code> (returning a flat list with full
+          navigation context) and <code>getSectionNav()</code> (returning prev/next section
+          objects for pagination).
+</p> <h3>Implementation Requirements</h3> <p>
+All files must be created. TypeScript and build errors must be resolved before
+          submission. The build command <code>npm run build</code> must succeed with zero errors.
+          After creating all files, commit everything with the message:
+<em>"feat: build complete Astro textbook website"</em>.
+</p> <h2>Conclusion</h2> <p>
+The prompt described above was executed by GitHub Copilot to produce this website.
+          The resulting application demonstrates the feasibility of using AI-assisted development
+          to scaffold complex, content-rich static sites from a single, well-structured prompt.
+          The site achieves all specified requirements: dual-topic academic content, APA-7 visual
+          design, nested navigation, and a fully functional static build.
+</p> <h2>References</h2> <p class="no-indent" style="padding-left:0.5in;text-indent:-0.5in">
+American Psychological Association. (2020). <em>Publication manual of the American
+          Psychological Association</em> (7th ed.). https://doi.org/10.1037/0000165-000
+</p> <p class="no-indent" style="padding-left:0.5in;text-indent:-0.5in">
+Astro contributors. (2024). <em>Astro documentation</em>. https://docs.astro.build/
+</p> <p class="no-indent" style="padding-left:0.5in;text-indent:-0.5in">
+GitHub. (2024). <em>GitHub Copilot documentation</em>. https://docs.github.com/copilot
+</p> </div> </div> </main>  </div> </body></html>
