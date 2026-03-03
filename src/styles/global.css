@@ -142,7 +142,23 @@ html, body {
   color: #1a2e4a;
 }
 
-/* Page layout */
+.dropdown-unit {
+  padding: 2px 0;
+}
+
+.dropdown-unit-label {
+  padding: 4px 16px 2px 20px;
+  font-size: 11px;
+  font-style: italic;
+  color: #999;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.dropdown-unit a {
+  padding-left: 28px;
+}
+
+
 .page-wrapper {
   margin-top: 48px;
   display: flex;
@@ -204,12 +220,19 @@ html, body {
   font-weight: 600;
 }
 
-.sidebar .sub-item a {
+/* Heading depth levels in sidebar (H2=sections, H3=subsections, H4=sub-subsections) */
+.sidebar .heading-depth-2 a {
+  padding-left: 1rem;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.sidebar .heading-depth-3 a {
   padding-left: 1.75rem;
   font-size: 12px;
 }
 
-.sidebar .subsub-item a {
+.sidebar .heading-depth-4 a {
   padding-left: 2.5rem;
   font-size: 11px;
   color: #666;

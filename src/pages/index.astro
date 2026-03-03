@@ -1,6 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { topics } from '../data/content';
+import { getCollection } from 'astro:content';
+import { buildNavTree, entryToNavChapter } from '../data/content';
+
+const entries = await getCollection('chapters');
+const navChapters = entries.map(entryToNavChapter);
+const topics = buildNavTree(navChapters);
 ---
 <BaseLayout title="Home">
   <main style="flex:1; background:#e8e8e8;">
@@ -11,20 +16,22 @@ import { topics } from '../data/content';
     <div class="topics-grid">
       {topics.map((topic) => (
         <div class="topic-card">
-          <h2><a href={`/${topic.slug}`}>{topic.title}</a></h2>
+          <h2>{topic.title}</h2>
           {topic.books.map((book) => (
             <div style="margin-bottom:1rem">
               <strong style="font-size:14px">{book.title}</strong>
-              <ul>
-                {book.units.map((unit) => (
-                  <li>
-                    <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>{unit.title}</a>
-                    <span style="color:#999; font-size:11px; margin-left:6px">
-                      ({unit.chapters.length} ch.)
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              {book.units.map((unit) => (
+                <div style="margin-top:0.5rem">
+                  <span style="font-size:11px;text-transform:uppercase;color:#888;letter-spacing:0.05em">{unit.title}</span>
+                  <ul>
+                    {unit.chapters.map((chapter) => (
+                      <li>
+                        <a href={chapter.href}>{chapter.title}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           ))}
         </div>

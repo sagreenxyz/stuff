@@ -1,69 +1,47 @@
 ---
-import BaseLayout from '../../../../../layouts/BaseLayout.astro';
-import Breadcrumb from '../../../../../components/Breadcrumb.astro';
-import { topics } from '../../../../../data/content';
+import { getCollection } from 'astro:content';
+import ChapterLayout from '../../../../../layouts/ChapterLayout.astro';
+import { entryToNavChapter, buildNavTree, getChapterNav } from '../../../../../data/content';
 
 export async function getStaticPaths() {
-  const paths = [];
-  for (const topic of topics) {
-    for (const book of topic.books) {
-      for (const unit of book.units) {
-        for (const chapter of unit.chapters) {
-          paths.push({
-            params: { topic: topic.slug, book: book.slug, unit: unit.slug, chapter: chapter.slug },
-            props: { topic, book, unit, chapter },
-          });
-        }
-      }
-    }
-  }
-  return paths;
+  const entries = await getCollection('chapters');
+  const navChapters = entries.map(entryToNavChapter);
+  // Sort globally for pagination (by topic, book, unit, then order within unit)
+  navChapters.sort((a, b) => {
+    const topicCmp = a.topicSlug.localeCompare(b.topicSlug);
+    if (topicCmp !== 0) return topicCmp;
+    const bookCmp = a.bookSlug.localeCompare(b.bookSlug);
+    if (bookCmp !== 0) return bookCmp;
+    const unitCmp = a.unitOrder - b.unitOrder;
+    if (unitCmp !== 0) return unitCmp;
+    return a.order - b.order;
+  });
+
+  return entries.map((entry) => {
+    const navCh = entryToNavChapter(entry);
+    const { prev, next } = getChapterNav(navChapters, navCh.href);
+    return {
+      params: {
+        topic: navCh.topicSlug,
+        book: navCh.bookSlug,
+        unit: navCh.unitSlug,
+        chapter: navCh.slug,
+      },
+      props: { entry, navCh, prev, next },
+    };
+  });
 }
 
-const { topic, book, unit, chapter } = Astro.props;
-const firstSection = chapter.sections[0];
+const { entry, navCh, prev, next } = Astro.props;
+const { Content, headings } = await entry.render();
 ---
-<BaseLayout title={`${chapter.title} — ${book.title}`}>
-  <main class="main-content" style="width:100%">
-    <Breadcrumb items={[
-      { label: topic.title, href: `/${topic.slug}` },
-      { label: book.title, href: `/${topic.slug}/${book.slug}` },
-      { label: unit.title, href: `/${topic.slug}/${book.slug}/${unit.slug}` },
-      { label: chapter.title },
-    ]} />
-    <div class="apa-paper" style="min-height:auto">
-      <div class="apa-content">
-        <h1>{chapter.title}</h1>
-        <p class="no-indent">
-          Unit: <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>{unit.title}</a> —
-          Book: <a href={`/${topic.slug}/${book.slug}`}>{book.title}</a>
-        </p>
-        {firstSection && (
-          <p class="no-indent" style="margin-top:1em">
-            <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}/${firstSection.slug}`}
-               style="background:#1a2e4a;color:white;padding:8px 16px;text-decoration:none;font-family:sans-serif;font-size:13px;border-radius:4px">
-              Start Reading →
-            </a>
-          </p>
-        )}
-        <h2>Sections</h2>
-        <ol>
-          {chapter.sections.map((section) => (
-            <li>
-              <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}/${section.slug}`}>
-                {section.title}
-              </a>
-              {section.subsections.length > 0 && (
-                <ul>
-                  {section.subsections.map((sub) => (
-                    <li style="font-size:10pt">{sub.title}</li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ol>
-      </div>
-    </div>
-  </main>
-</BaseLayout>
+<ChapterLayout
+  title={navCh.title}
+  bookTitle={navCh.bookTitle}
+  headings={headings}
+  prev={prev}
+  next={next}
+>
+  <h1>{navCh.title}</h1>
+  <Content />
+</ChapterLayout>
