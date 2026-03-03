@@ -2,12 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { getCollection } from 'astro:content';
-import { buildNavTree, entryToNavChapter } from '../../data/content';
+import { buildNavTree, entryToNavSection } from '../../data/content';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('chapters');
-  const navChapters = entries.map(entryToNavChapter);
-  const topics = buildNavTree(navChapters);
+  const entries = await getCollection('sections');
+  const navSections = entries.map(entryToNavSection);
+  const topics = buildNavTree(navSections);
   return topics.map((topic) => ({
     params: { topic: topic.slug },
     props: { topic },
@@ -24,7 +24,7 @@ const { topic } = Astro.props;
         <h1>{topic.title}</h1>
         <p class="no-indent">
           This section contains all books within the <strong>{topic.title}</strong> topic.
-          Select a chapter below to begin reading.
+          Select a section below to begin reading.
         </p>
         {topic.books.map((book) => (
           <div style="margin-bottom:2em">
@@ -32,13 +32,20 @@ const { topic } = Astro.props;
             {book.units.map((unit) => (
               <div style="margin-bottom:1em">
                 <h3 style="color:inherit">{unit.title}</h3>
-                <ul>
-                  {unit.chapters.map((chapter) => (
-                    <li>
-                      <a href={chapter.href}>{chapter.title}</a>
-                    </li>
-                  ))}
-                </ul>
+                {unit.chapters.map((chapter) => (
+                  <div style="margin-bottom:0.5em">
+                    <h4 style="color:inherit">
+                      <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}`}>{chapter.title}</a>
+                    </h4>
+                    <ul>
+                      {chapter.sections.map((section) => (
+                        <li>
+                          <a href={section.href}>{section.title}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             ))}
           </div>

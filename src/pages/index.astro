@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import { buildNavTree, entryToNavChapter } from '../data/content';
+import { buildNavTree, entryToNavSection } from '../data/content';
 
-const entries = await getCollection('chapters');
-const navChapters = entries.map(entryToNavChapter);
-const topics = buildNavTree(navChapters);
+const entries = await getCollection('sections');
+const navSections = entries.map(entryToNavSection);
+const topics = buildNavTree(navSections);
 ---
 <BaseLayout title="Home">
   <main style="flex:1; background:#e8e8e8;">
@@ -23,13 +23,18 @@ const topics = buildNavTree(navChapters);
               {book.units.map((unit) => (
                 <div style="margin-top:0.5rem">
                   <span style="font-size:11px;text-transform:uppercase;color:#888;letter-spacing:0.05em">{unit.title}</span>
-                  <ul>
-                    {unit.chapters.map((chapter) => (
-                      <li>
-                        <a href={chapter.href}>{chapter.title}</a>
-                      </li>
-                    ))}
-                  </ul>
+                  {unit.chapters.map((chapter) => (
+                    <div style="margin-top:0.25rem">
+                      <span style="font-size:12px;font-weight:600;color:#555">{chapter.title}</span>
+                      <ul>
+                        {chapter.sections.map((section) => (
+                          <li>
+                            <a href={section.href}>{section.title}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

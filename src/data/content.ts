@@ -1,12 +1,12 @@
 /**
  * content.ts — Interfaces and navigation helpers for the file-based content system.
  *
- * All chapter content lives in src/content/chapters/<topic>/<book>/<unit>/<chapter>.md.
+ * All section content lives in src/content/<topic>/<book>/<unit>/<chapter>/<section>.mdx.
  * The CollectionEntry type from astro:content is the canonical data type; these interfaces
  * model the navigation/hierarchy structures derived from the collection at build time.
  */
 
-export interface NavChapter {
+export interface NavSection {
   slug: string;
   title: string;
   topicSlug: string;
@@ -16,9 +16,18 @@ export interface NavChapter {
   unitSlug: string;
   unitTitle: string;
   unitOrder: number;
+  chapterSlug: string;
+  chapterTitle: string;
+  chapterOrder: number;
   order: number;
-  /** Full path segment used in URLs: topic/book/unit/chapter */
+  /** Full path segment used in URLs: /topic/book/unit/chapter/section */
   href: string;
+}
+
+export interface NavChapter {
+  slug: string;
+  title: string;
+  sections: NavSection[];
 }
 
 export interface NavUnit {
@@ -40,41 +49,62 @@ export interface NavTopic {
 }
 
 /**
- * Build a nested navigation tree from a flat list of NavChapter entries.
- * Call this in .astro files after fetching chapters from getCollection('chapters').
+ * Build a nested navigation tree from a flat list of NavSection entries.
+ * Call this in .astro files after fetching sections from getCollection('sections').
  */
-export function buildNavTree(chapters: NavChapter[]): NavTopic[] {
+export function buildNavTree(sections: NavSection[]): NavTopic[] {
   const topicsMap = new Map<string, NavTopic>();
 
-  for (const ch of chapters) {
+  for (const sec of sections) {
     // Topic
-    if (!topicsMap.has(ch.topicSlug)) {
-      topicsMap.set(ch.topicSlug, { slug: ch.topicSlug, title: ch.topicTitle, books: [] });
+    if (!topicsMap.has(sec.topicSlug)) {
+      topicsMap.set(sec.topicSlug, { slug: sec.topicSlug, title: sec.topicTitle, books: [] });
     }
-    const topic = topicsMap.get(ch.topicSlug)!;
+    const topic = topicsMap.get(sec.topicSlug)!;
 
     // Book
-    let book = topic.books.find((b) => b.slug === ch.bookSlug);
+    let book = topic.books.find((b) => b.slug === sec.bookSlug);
     if (!book) {
-      book = { slug: ch.bookSlug, title: ch.bookTitle, units: [] };
+      book = { slug: sec.bookSlug, title: sec.bookTitle, units: [] };
       topic.books.push(book);
     }
 
     // Unit
-    let unit = book.units.find((u) => u.slug === ch.unitSlug);
+    let unit = book.units.find((u) => u.slug === sec.unitSlug);
     if (!unit) {
-      unit = { slug: ch.unitSlug, title: ch.unitTitle, chapters: [] };
+      unit = { slug: sec.unitSlug, title: sec.unitTitle, chapters: [] };
       book.units.push(unit);
     }
 
-    unit.chapters.push(ch);
+    // Chapter
+    let chapter = unit.chapters.find((c) => c.slug === sec.chapterSlug);
+    if (!chapter) {
+      chapter = { slug: sec.chapterSlug, title: sec.chapterTitle, sections: [] };
+      unit.chapters.push(chapter);
+    }
+
+    chapter.sections.push(sec);
   }
 
-  // Sort chapters within each unit by order
+  // Sort within each level
   for (const topic of topicsMap.values()) {
     for (const book of topic.books) {
+      book.units.sort((a, b) => {
+        const aUnit = a.chapters[0]?.sections[0];
+        const bUnit = b.chapters[0]?.sections[0];
+        if (!aUnit || !bUnit) return 0;
+        return aUnit.unitOrder - bUnit.unitOrder;
+      });
       for (const unit of book.units) {
-        unit.chapters.sort((a, b) => a.order - b.order);
+        unit.chapters.sort((a, b) => {
+          const aSec = a.sections[0];
+          const bSec = b.sections[0];
+          if (!aSec || !bSec) return 0;
+          return aSec.chapterOrder - bSec.chapterOrder;
+        });
+        for (const chapter of unit.chapters) {
+          chapter.sections.sort((a, b) => a.order - b.order);
+        }
       }
     }
   }
@@ -83,10 +113,9 @@ export function buildNavTree(chapters: NavChapter[]): NavTopic[] {
 }
 
 /**
- * Convert a getCollection('chapters') entry to a NavChapter.
- * Import CollectionEntry from 'astro:content' in the calling .astro file.
+ * Convert a getCollection('sections') entry to a NavSection.
  */
-export function entryToNavChapter(entry: {
+export function entryToNavSection(entry: {
   id: string;
   data: {
     title: string;
@@ -97,16 +126,18 @@ export function entryToNavChapter(entry: {
     unitSlug: string;
     unitTitle: string;
     unitOrder: number;
+    chapterSlug: string;
+    chapterTitle: string;
+    chapterOrder: number;
     order: number;
   };
-}): NavChapter {
-  // entry.id is like "mathematics/calculus/limits-continuity/understanding-limits"
-  // The last segment is the chapter slug
-  const parts = entry.id.replace(/\.md$/, '').split('/');
-  const chapterSlug = parts[parts.length - 1]!;
-  const { topicSlug, bookSlug, unitSlug } = entry.data;
+}): NavSection {
+  // entry.id is like "mathematics/calculus/limits-continuity/understanding-limits/introduction-to-limits"
+  const parts = entry.id.replace(/\.(md|mdx)$/, '').split('/');
+  const sectionSlug = parts[parts.length - 1]!;
+  const { topicSlug, bookSlug, unitSlug, chapterSlug } = entry.data;
   return {
-    slug: chapterSlug,
+    slug: sectionSlug,
     title: entry.data.title,
     topicSlug,
     topicTitle: entry.data.topicTitle,
@@ -115,22 +146,25 @@ export function entryToNavChapter(entry: {
     unitSlug,
     unitTitle: entry.data.unitTitle,
     unitOrder: entry.data.unitOrder,
+    chapterSlug,
+    chapterTitle: entry.data.chapterTitle,
+    chapterOrder: entry.data.chapterOrder,
     order: entry.data.order,
-    href: `/${topicSlug}/${bookSlug}/${unitSlug}/${chapterSlug}`,
+    href: `/${topicSlug}/${bookSlug}/${unitSlug}/${chapterSlug}/${sectionSlug}`,
   };
 }
 
 /**
- * Get prev/next chapters from a flat ordered list of NavChapters.
+ * Get prev/next sections from a flat ordered list of NavSections.
  */
-export function getChapterNav(
-  chapters: NavChapter[],
+export function getSectionNav(
+  sections: NavSection[],
   currentHref: string
-): { prev: NavChapter | null; next: NavChapter | null } {
-  const idx = chapters.findIndex((c) => c.href === currentHref);
+): { prev: NavSection | null; next: NavSection | null } {
+  const idx = sections.findIndex((s) => s.href === currentHref);
   if (idx === -1) return { prev: null, next: null };
   return {
-    prev: idx > 0 ? chapters[idx - 1]! : null,
-    next: idx < chapters.length - 1 ? chapters[idx + 1]! : null,
+    prev: idx > 0 ? sections[idx - 1]! : null,
+    next: idx < sections.length - 1 ? sections[idx + 1]! : null,
   };
 }

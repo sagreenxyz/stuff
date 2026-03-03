@@ -1,10 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import { buildNavTree, entryToNavChapter } from '../data/content';
+import { buildNavTree, entryToNavSection } from '../data/content';
 
-const entries = await getCollection('chapters');
-const navChapters = entries.map(entryToNavChapter);
-const topics = buildNavTree(navChapters);
+const entries = await getCollection('sections');
+const navSections = entries.map(entryToNavSection);
+const topics = buildNavTree(navSections);
 ---
 <nav class="navbar">
   <a href="/" class="navbar-brand">📚 OpenTextbook</a>
@@ -23,7 +23,12 @@ const topics = buildNavTree(navChapters);
                 <div class="dropdown-unit">
                   <div class="dropdown-unit-label">{unit.title}</div>
                   {unit.chapters.map((chapter) => (
-                    <a href={chapter.href}>{chapter.title}</a>
+                    <div class="dropdown-chapter">
+                      <div class="dropdown-chapter-label">{chapter.title}</div>
+                      {chapter.sections.map((section) => (
+                        <a href={section.href}>{section.title}</a>
+                      ))}
+                    </div>
                   ))}
                 </div>
               ))}
