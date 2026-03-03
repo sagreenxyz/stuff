@@ -1,5 +1,10 @@
 ---
-import { topics } from '../data/content';
+import { getCollection } from 'astro:content';
+import { buildNavTree, entryToNavChapter } from '../data/content';
+
+const entries = await getCollection('chapters');
+const navChapters = entries.map(entryToNavChapter);
+const topics = buildNavTree(navChapters);
 ---
 <nav class="navbar">
   <a href="/" class="navbar-brand">📚 OpenTextbook</a>
@@ -15,9 +20,12 @@ import { topics } from '../data/content';
             <div class="dropdown-section">
               <div class="dropdown-header">{book.title}</div>
               {book.units.map((unit) => (
-                <a href={`/${topic.slug}/${book.slug}/${unit.slug}`}>
-                  {unit.title}
-                </a>
+                <div class="dropdown-unit">
+                  <div class="dropdown-unit-label">{unit.title}</div>
+                  {unit.chapters.map((chapter) => (
+                    <a href={chapter.href}>{chapter.title}</a>
+                  ))}
+                </div>
               ))}
             </div>
           ))}
@@ -31,7 +39,7 @@ import { topics } from '../data/content';
 </nav>
 
 <script>
-  // Vanilla JS dropdown toggle for keyboard/click accessibility
+  // Toggle dropdown menus on button click; close on outside click
   document.querySelectorAll('.navbar-item > button').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const item = (e.currentTarget as HTMLElement).closest('.navbar-item');

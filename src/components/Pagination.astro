@@ -1,33 +1,27 @@
 ---
-import type { FlatSection } from '../data/content';
+import type { NavChapter } from '../data/content';
 
 interface Props {
-  prev: FlatSection | null;
-  next: FlatSection | null;
+  prev: NavChapter | null;
+  next: NavChapter | null;
 }
 const { prev, next } = Astro.props;
 ---
-<nav class="pagination" aria-label="Section navigation">
+<nav class="pagination" aria-label="Chapter navigation">
   {prev ? (
-    <a
-      href={`/${prev.topicSlug}/${prev.bookSlug}/${prev.unitSlug}/${prev.chapterSlug}/${prev.sectionSlug}`}
-      class="prev-link"
-    >
+    <a href={prev.href} class="prev-link">
       <span style="font-size:18px">←</span>
       <span>
         <span class="link-label">Previous</span><br />
-        <span class="link-title">{prev.sectionTitle}</span>
+        <span class="link-title">{prev.title}</span>
       </span>
     </a>
   ) : <span></span>}
   {next ? (
-    <a
-      href={`/${next.topicSlug}/${next.bookSlug}/${next.unitSlug}/${next.chapterSlug}/${next.sectionSlug}`}
-      class="next-link"
-    >
+    <a href={next.href} class="next-link">
       <span>
         <span class="link-label">Next</span><br />
-        <span class="link-title">{next.sectionTitle}</span>
+        <span class="link-title">{next.title}</span>
       </span>
       <span style="font-size:18px">→</span>
     </a>

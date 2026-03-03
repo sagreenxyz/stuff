@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
-import { topics } from '../../../data/content';
+import { getCollection } from 'astro:content';
+import { buildNavTree, entryToNavChapter } from '../../../data/content';
 
 export async function getStaticPaths() {
+  const entries = await getCollection('chapters');
+  const navChapters = entries.map(entryToNavChapter);
+  const topics = buildNavTree(navChapters);
   const paths = [];
   for (const topic of topics) {
     for (const book of topic.books) {
@@ -27,34 +31,17 @@ const { topic, book } = Astro.props;
     <div class="apa-paper" style="min-height:auto">
       <div class="apa-content">
         <h1>{book.title}</h1>
-        <p class="no-indent">
-          Part of the <a href={`/${topic.slug}`}>{topic.title}</a> collection.
-        </p>
+        <p class="no-indent">Part of the <a href={`/${topic.slug}`}>{topic.title}</a> collection.</p>
         {book.units.map((unit) => (
           <div style="margin-bottom:2em">
-            <h2>
-              <a href={`/${topic.slug}/${book.slug}/${unit.slug}`} style="color:inherit;text-decoration:none">
-                {unit.title}
-              </a>
-            </h2>
-            {unit.chapters.map((chapter) => (
-              <div style="margin-bottom:1em">
-                <h3>
-                  <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}`} style="color:inherit;text-decoration:none">
-                    {chapter.title}
-                  </a>
-                </h3>
-                <ul>
-                  {chapter.sections.map((section) => (
-                    <li>
-                      <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}/${section.slug}`}>
-                        {section.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <h2 style="color:inherit">{unit.title}</h2>
+            <ul>
+              {unit.chapters.map((chapter) => (
+                <li>
+                  <a href={chapter.href}>{chapter.title}</a>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>

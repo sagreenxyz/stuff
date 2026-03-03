@@ -1,0 +1,33 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Pagination from '../components/Pagination.astro';
+import type { MarkdownHeading } from 'astro';
+import type { NavChapter } from '../data/content';
+
+interface Props {
+  title: string;
+  bookTitle: string;
+  headings: MarkdownHeading[];
+  prev: NavChapter | null;
+  next: NavChapter | null;
+}
+
+const { title, bookTitle, headings, prev, next } = Astro.props;
+const runningHead = bookTitle.toUpperCase().slice(0, 50);
+---
+<BaseLayout title={title}>
+  <Sidebar headings={headings} />
+  <main class="main-content">
+    <article class="apa-paper">
+      <div class="running-head">
+        <span>{runningHead}</span>
+        <span class="page-num">1</span>
+      </div>
+      <div class="apa-content">
+        <slot />
+      </div>
+    </article>
+    <Pagination prev={prev} next={next} />
+  </main>
+</BaseLayout>
