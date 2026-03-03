@@ -1,0 +1,57 @@
+---
+import SectionLayout from '../../../../../layouts/SectionLayout.astro';
+import { topics, getAllSections, getSectionNav } from '../../../../../data/content';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const topic of topics) {
+    for (const book of topic.books) {
+      for (const unit of book.units) {
+        for (const chapter of unit.chapters) {
+          for (const section of chapter.sections) {
+            const nav = getSectionNav(topic.slug, book.slug, unit.slug, chapter.slug, section.slug);
+            paths.push({
+              params: {
+                topic: topic.slug,
+                book: book.slug,
+                unit: unit.slug,
+                chapter: chapter.slug,
+                section: section.slug,
+              },
+              props: {
+                topic,
+                book,
+                unit,
+                chapter,
+                section,
+                prev: nav.prev,
+                next: nav.next,
+              },
+            });
+          }
+        }
+      }
+    }
+  }
+  return paths;
+}
+
+const { topic, book, unit, chapter, section, prev, next } = Astro.props;
+---
+<SectionLayout
+  title={section.title}
+  topicSlug={topic.slug}
+  bookSlug={book.slug}
+  unitSlug={unit.slug}
+  chapterSlug={chapter.slug}
+  sectionSlug={section.slug}
+  topicTitle={topic.title}
+  bookTitle={book.title}
+  unitTitle={unit.title}
+  chapterTitle={chapter.title}
+  sectionTitle={section.title}
+  sections={chapter.sections}
+  section={section}
+  prev={prev}
+  next={next}
+/>

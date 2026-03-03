@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { topics } from '../../data/content';
+
+export async function getStaticPaths() {
+  return topics.map((topic) => ({
+    params: { topic: topic.slug },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+---
+<BaseLayout title={topic.title}>
+  <main class="main-content" style="width:100%">
+    <Breadcrumb items={[{ label: topic.title }]} />
+    <div class="apa-paper" style="min-height:auto">
+      <div class="apa-content">
+        <h1>{topic.title}</h1>
+        <p class="no-indent">
+          This section contains all books within the <strong>{topic.title}</strong> topic.
+          Select a book and unit below to begin reading.
+        </p>
+        {topic.books.map((book) => (
+          <div style="margin-bottom:2em">
+            <h2><a href={`/${topic.slug}/${book.slug}`} style="color:inherit;text-decoration:none">{book.title}</a></h2>
+            {book.units.map((unit) => (
+              <div style="margin-bottom:1em">
+                <h3>
+                  <a href={`/${topic.slug}/${book.slug}/${unit.slug}`} style="color:inherit;text-decoration:none">
+                    {unit.title}
+                  </a>
+                </h3>
+                <ul>
+                  {unit.chapters.map((chapter) => (
+                    <li>
+                      <a href={`/${topic.slug}/${book.slug}/${unit.slug}/${chapter.slug}`}>
+                        {chapter.title}
+                      </a>
+                      <span style="font-size:10pt; color:#666; font-family:sans-serif; margin-left:6px">
+                        ({chapter.sections.length} sections)
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
